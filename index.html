@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ước lượng điểm ĐGNL V-ACT Đề 4 · IRT 2PL</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ── Theme tokens ── */
+:root[data-theme="dark"] {
+  --bg:        #0f1117;
+  --surface:   #1a1d27;
+  --surface2:  #222535;
+  --border:    #2e3347;
+  --text:      #e8eaf6;
+  --muted:     #7b82a0;
+  --accent:    #ff6b6b; /* Đổi màu chủ đạo sang đỏ cam cho Đề V-ACT */
+  --accent-glow: rgba(255, 107, 107, 0.18);
+
+  --easy-bg:   rgba(34,197,94,.12);  --easy-text: #4ade80; --easy-border: rgba(74,222,128,.25);
+  --med-bg:    rgba(250,204,21,.10); --med-text:  #fbbf24; --med-border:  rgba(251,191,36,.25);
+  --hard-bg:   rgba(239,68,68,.12);  --hard-text: #f87171; --hard-border: rgba(248,113,113,.25);
+
+  --correct:        #22c55e; --correct-glow: rgba(34,197,94,.25);
+  --wrong:          #ef4444; --wrong-glow:   rgba(239,68,68,.25);
+  --shadow:    0 4px 24px rgba(0,0,0,.4);
+  --shadow-sm: 0 1px 4px  rgba(0,0,0,.3);
+}
+:root[data-theme="light"] {
+  --bg:        #f0f2f8;
+  --surface:   #ffffff;
+  --surface2:  #f5f7ff;
+  --border:    #dde1f0;
+  --text:      #1a1d2e;
+  --muted:     #6b7280;
+  --accent:    #e03131;
+  --accent-glow: rgba(224, 49, 49, 0.12);
+
+  --easy-bg:   #dcfce7; --easy-text: #15803d; --easy-border: #86efac;
+  --med-bg:    #fef9c3; --med-text:  #854d0e; --med-border:  #fde047;
+  --hard-bg:   #fee2e2; --hard-text: #991b1b; --hard-border: #fca5a5;
+
+  --correct:        #16a34a; --correct-glow: rgba(22,163,74,.2);
+  --wrong:          #dc2626; --wrong-glow:   rgba(220,38,38,.2);
+  --shadow:    0 4px 24px rgba(0,0,0,.08);
+  --shadow-sm: 0 1px 4px  rgba(0,0,0,.06);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Be Vietnam Pro', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; min-height: 100vh; transition: background .3s, color .3s; }
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); backdrop-filter: blur(12px); }
+.header-left { display: flex; align-items: center; gap: 12px; }
+.logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), #ff922b); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; box-shadow: 0 0 16px var(--accent-glow); }
+.header-left h1 { font-size: 14px; font-weight: 700; letter-spacing: -.02em; }
+.header-left p { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.header-right { display: flex; gap: 8px; align-items: center; }
+.legend-items { display: flex; gap: 10px; font-size: 11px; margin-right: 4px; }
+.leg { display: flex; align-items: center; gap: 5px; color: var(--muted); }
+.leg-sq { width: 8px; height: 8px; border-radius: 50%; }
+.btn { font-family: inherit; font-size: 12px; font-weight: 500; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 6px; }
+.btn:hover { background: var(--border); color: var(--text); }
+.btn-theme { width: 36px; height: 36px; padding: 0; justify-content: center; border-radius: 10px; font-size: 16px; }
+.btn-reset { color: var(--wrong); border-color: var(--wrong-glow); }
+.btn-reset:hover { background: var(--wrong-glow); }
+#scorebar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: grid; grid-template-columns: auto 1px repeat(4, 1fr); gap: 0; }
+.sc-divider { background: var(--border); margin: 12px 0; }
+.sc-block { text-align: center; padding: 12px 16px; position: relative; }
+.sc-block + .sc-block::before { content: ''; position: absolute; left: 0; top: 20%; bottom: 20%; width: 1px; background: var(--border); }
+.sc-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.sc-value { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 600; color: var(--text); transition: all .3s; line-height: 1; }
+.sc-max { font-size: 10px; color: var(--muted); margin-top: 3px; }
+.sc-block.total { padding: 12px 24px; background: linear-gradient(135deg, rgba(255,107,107,.06), rgba(255,146,43,.06)); }
+.sc-block.total .sc-value { font-size: 32px; background: linear-gradient(135deg, var(--accent), #ff922b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.sc-block.active .sc-value { color: var(--accent); }
+#prog-wrap { background: var(--surface); border-bottom: 1px solid var(--border); padding: 8px 24px; display: flex; align-items: center; gap: 12px; }
+.prog-bar { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #ff922b); border-radius: 2px; transition: width .4s cubic-bezier(.4,0,.2,1); width: 0%; box-shadow: 0 0 8px var(--accent-glow); }
+#prog-text { font-size: 11px; color: var(--muted); white-space: nowrap; font-family: 'JetBrains Mono', monospace; }
+main { max-width: 1000px; margin: 0 auto; padding: 20px 16px 60px; }
+.sec-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 16px; overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow .2s; }
+.sec-card:hover { box-shadow: var(--shadow); }
+.sec-head { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+.sec-head-left { display: flex; align-items: center; gap: 10px; }
+.sec-bullet { width: 4px; height: 20px; border-radius: 2px; background: linear-gradient(to bottom, var(--accent), #ff922b); }
+.sec-name { font-size: 13px; font-weight: 700; letter-spacing: -.01em; }
+.sec-info { display: flex; gap: 10px; align-items: center; }
+.sec-theta { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; background: var(--surface2); border: 1px solid var(--border); padding: 2px 8px; border-radius: 6px; }
+.sec-pts { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; background: linear-gradient(135deg, var(--accent), #ff922b); color: #fff; padding: 3px 12px; border-radius: 20px; min-width: 56px; text-align: center; box-shadow: 0 0 12px var(--accent-glow); }
+.sec-pts.empty { background: var(--surface2); color: var(--muted); box-shadow: none; }
+.diff-chips { display: flex; gap: 6px; font-size: 10px; padding: 8px 18px; background: var(--surface2); border-bottom: 1px solid var(--border); align-items: center; }
+.chip { padding: 2px 10px; border-radius: 20px; font-weight: 600; letter-spacing: .01em; border: 1px solid; }
+.chip.e { background: var(--easy-bg); color: var(--easy-text); border-color: var(--easy-border); }
+.chip.m { background: var(--med-bg); color: var(--med-text); border-color: var(--med-border); }
+.chip.h { background: var(--hard-bg); color: var(--hard-text); border-color: var(--hard-border); }
+.chip-hint { margin-left: auto; font-size: 10px; color: var(--muted); display: flex; gap: 12px; }
+.hint-item { display: flex; align-items: center; gap: 4px; }
+.hint-dot { width: 6px; height: 6px; border-radius: 50%; }
+.q-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; padding: 14px 18px; }
+.q { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; border: 1.5px solid var(--border); cursor: pointer; user-select: none; transition: all .12s cubic-bezier(.4,0,.2,1); position: relative; background: var(--surface2); }
+.q:hover { border-color: var(--accent); transform: translateY(-2px) scale(1.04); box-shadow: 0 4px 12px var(--accent-glow); }
+.q:active { transform: scale(.96); }
+.q-n { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--text); line-height: 1; }
+.q-d { font-size: 7px; margin-top: 3px; font-weight: 700; padding: 1px 5px; border-radius: 8px; letter-spacing: .03em; }
+.q.e .q-d { background: var(--easy-bg); color: var(--easy-text); }
+.q.m .q-d { background: var(--med-bg); color: var(--med-text); }
+.q.h .q-d { background: var(--hard-bg); color: var(--hard-text); }
+.q.correct { background: var(--correct); border-color: var(--correct); box-shadow: 0 0 12px var(--correct-glow); }
+.q.correct .q-n { color: #fff; }
+.q.correct .q-d { background: rgba(255,255,255,.2); color: rgba(255,255,255,.9); }
+.q.correct:hover { opacity: .9; border-color: var(--correct); }
+.q.wrong { background: var(--wrong); border-color: var(--wrong); box-shadow: 0 0 12px var(--wrong-glow); }
+.q.wrong .q-n { color: #fff; }
+.q.wrong .q-d { background: rgba(255,255,255,.2); color: rgba(255,255,255,.9); }
+.q.wrong:hover { opacity: .9; border-color: var(--wrong); }
+.footer-note { text-align: center; font-size: 11px; color: var(--muted); margin-top: 32px; line-height: 2; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+@keyframes pop { 0% { transform: scale(.92); opacity: .6; } 60% { transform: scale(1.06); } 100% { transform: scale(1); opacity: 1; } }
+.q.correct, .q.wrong { animation: pop .18s ease forwards; }
+@media (max-width: 640px) { .q-grid { grid-template-columns: repeat(6, 1fr); gap: 5px; } #scorebar { grid-template-columns: 1fr 1px 1fr 1px 1fr; grid-template-rows: auto auto; } .sc-block.total { grid-column: 1 / -1; border-bottom: 1px solid var(--border); } .sc-divider { display: none; } header { padding: 0 14px; } .header-left h1 { font-size: 12px; } .chip-hint { display: none; } }
+@media (max-width: 400px) { .q-grid { grid-template-columns: repeat(5, 1fr); } }
+[data-theme="dark"] #icon-sun { display: none; }
+[data-theme="light"] #icon-moon { display: none; }
+.btn svg { flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" width="20" height="20">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
+      </svg>
+    </div>
+    <div>
+      <h1>Ước lượng điểm: ĐỀ V-ACT SỐ 4</h1>
+      <p>Mô hình IRT 2 tham số (2PL) · Đánh giá tự động</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="legend-items">
+      <span class="leg"><span class="leg-sq" style="background:var(--correct)"></span>Đúng</span>
+      <span class="leg"><span class="leg-sq" style="background:var(--wrong)"></span>Sai</span>
+    </div>
+    <button class="btn btn-theme" id="btn-theme" title="Đổi giao diện" onclick="toggleTheme()">
+      <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998z" />
+      </svg>
+      <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0z" />
+      </svg>
+    </button>
+    <button class="btn btn-reset" onclick="resetAll()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="14" height="14">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+      </svg>
+      Làm lại
+    </button>
+  </div>
+</header>
+
+<div id="scorebar">
+  <div class="sc-block total">
+    <div class="sc-label">Tổng điểm</div>
+    <div class="sc-value" id="sc-total">—</div>
+    <div class="sc-max">/ 1200</div>
+  </div>
+  <div class="sc-divider"></div>
+  <div class="sc-block">
+    <div class="sc-label">Tiếng Việt</div>
+    <div class="sc-value" id="sc-0">—</div>
+    <div class="sc-max">/ 300</div>
+  </div>
+  <div class="sc-block">
+    <div class="sc-label">Tiếng Anh</div>
+    <div class="sc-value" id="sc-1">—</div>
+    <div class="sc-max">/ 300</div>
+  </div>
+  <div class="sc-block">
+    <div class="sc-label">Toán học</div>
+    <div class="sc-value" id="sc-2">—</div>
+    <div class="sc-max">/ 300</div>
+  </div>
+  <div class="sc-block">
+    <div class="sc-label">Tư duy KH</div>
+    <div class="sc-value" id="sc-3">—</div>
+    <div class="sc-max">/ 300</div>
+  </div>
+</div>
+
+<div id="prog-wrap">
+  <div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
+  <span id="prog-text">0 / 120</span>
+</div>
+
+<main id="main"></main>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   Theme toggle
+══════════════════════════════════════════════════════════════ */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DỮ LIỆU ĐƯỢC ƯỚC TÍNH CHO ĐỀ V-ACT SỐ 4 (RẤT KHÓ)
+   - Do đề khó, phân bổ d=3 (Khó) nhiều hơn, tham số b bị đẩy lên cao.
+   - Các câu Toán học và Logic khoa học có b lên tới 2.0 - 2.5
+══════════════════════════════════════════════════════════════ */
+
+const SECS = [
+  { name: "I. Sử dụng ngôn ngữ — Tiếng Việt", id: 0 },
+  { name: "II. Sử dụng ngôn ngữ — Tiếng Anh",  id: 1 },
+  { name: "III. Toán học",                       id: 2 },
+  { name: "IV. Tư duy khoa học",                 id: 3 },
+];
+
+// PHẦN 1: TIẾNG VIỆT (Q1 - Q30)
+// Bài đọc Chế Lan Viên (Q26-Q30) rất trừu tượng -> Khó.
+const secI = [
+  {d:1, b:-1.2, a:1.0}, {d:2, b:0.4, a:1.1},  {d:1, b:-1.0, a:1.0}, {d:3, b:1.2, a:1.3},  {d:3, b:1.4, a:1.2},  // 1-5
+  {d:3, b:1.3, a:1.4},  {d:2, b:0.3, a:1.0},  {d:2, b:0.6, a:1.1},  {d:2, b:0.5, a:1.2},  {d:1, b:-1.5, a:0.9}, // 6-10
+  {d:1, b:-0.8, a:1.0}, {d:3, b:1.5, a:1.4},  {d:2, b:0.4, a:1.1},  {d:3, b:1.6, a:1.2},  {d:3, b:1.4, a:1.3},  // 11-15
+  {d:2, b:0.2, a:1.1},  {d:2, b:0.5, a:1.2},  {d:2, b:0.4, a:1.1},  {d:2, b:0.6, a:1.2},  {d:1, b:-0.9, a:1.0}, // 16-20
+  {d:2, b:0.3, a:1.1},  {d:2, b:0.4, a:1.2},  {d:3, b:1.2, a:1.3},  {d:2, b:0.5, a:1.1},  {d:3, b:1.3, a:1.2},  // 21-25
+  {d:3, b:1.1, a:1.1},  {d:3, b:1.5, a:1.4},  {d:3, b:1.4, a:1.3},  {d:3, b:1.6, a:1.5},  {d:3, b:1.7, a:1.4}   // 26-30 (Chế Lan Viên)
+];
+
+// PHẦN 2: TIẾNG ANH (Q31 - Q60)
+const secII = [
+  {d:1, b:-1.3, a:1.0}, {d:1, b:-1.1, a:1.0}, {d:2, b:0.3, a:1.1},  {d:2, b:0.2, a:1.2},  {d:1, b:-1.5, a:0.9}, // 31-35
+  {d:1, b:-0.8, a:1.0}, {d:2, b:0.4, a:1.2},  {d:3, b:1.2, a:1.3},  {d:3, b:1.4, a:1.4},  {d:1, b:-1.0, a:1.0}, // 36-40
+  {d:2, b:0.3, a:1.1},  {d:2, b:0.5, a:1.1},  {d:3, b:1.5, a:1.5},  {d:3, b:1.2, a:1.2},  {d:3, b:1.3, a:1.4},  // 41-45
+  {d:2, b:0.4, a:1.1},  {d:2, b:0.6, a:1.2},  {d:1, b:-0.9, a:1.0}, {d:2, b:0.5, a:1.1},  {d:2, b:0.7, a:1.3},  // 46-50
+  {d:3, b:1.4, a:1.4},  {d:3, b:1.6, a:1.5},  {d:2, b:0.3, a:1.1},  {d:2, b:0.5, a:1.2},  {d:2, b:0.4, a:1.1},  // 51-55
+  {d:2, b:0.6, a:1.2},  {d:2, b:0.8, a:1.3},  {d:3, b:1.5, a:1.4},  {d:3, b:1.3, a:1.3},  {d:3, b:1.7, a:1.5}   // 56-60
+];
+
+// PHẦN 3: TOÁN HỌC (Q61 - Q90)
+// Đề này cực kì nặng Toán. Các câu 64, 69, 71, 77, 81, 87 có b > 1.8
+const secIII = [
+  {d:1, b:-1.0, a:0.9}, {d:1, b:-0.8, a:1.0}, {d:3, b:1.4, a:1.3},  {d:3, b:1.8, a:1.5},  {d:2, b:0.6, a:1.2},  // 61-65 (Q64 rất khó)
+  {d:2, b:0.7, a:1.2},  {d:3, b:1.2, a:1.3},  {d:2, b:0.5, a:1.1},  {d:3, b:1.6, a:1.5},  {d:2, b:0.8, a:1.2},  // 66-70 (Q69 Tiếp tuyến khó)
+  {d:3, b:2.0, a:1.6},  {d:2, b:0.7, a:1.2},  {d:3, b:1.5, a:1.4},  {d:2, b:0.6, a:1.1},  {d:3, b:1.3, a:1.3},  // 71-75 (Q71 tích phân Elip siêu khó)
+  {d:3, b:1.7, a:1.5},  {d:3, b:1.9, a:1.6},  {d:1, b:-1.2, a:0.9}, {d:3, b:1.4, a:1.2},  {d:2, b:0.5, a:1.1},  // 76-80 (Q76-77 Quy hoạch TT)
+  {d:3, b:2.1, a:1.7},  {d:2, b:0.8, a:1.2},  {d:2, b:0.7, a:1.1},  {d:3, b:1.6, a:1.4},  {d:3, b:1.3, a:1.2},  // 81-85 (Q81 Quỹ tích mặt cầu)
+  {d:3, b:1.5, a:1.3},  {d:3, b:2.2, a:1.8},  {d:2, b:0.6, a:1.2},  {d:3, b:1.4, a:1.3},  {d:3, b:1.8, a:1.5}   // 86-90 (Q87 Max min hàm phân thức)
+];
+
+// PHẦN 4: TƯ DUY KHOA HỌC (Q91 - Q120)
+// Logic dài, Khoa học tính toán phức tạp (Micelle Hóa học, Sự nở nhiệt)
+const secIV = [
+  {d:3, b:1.3, a:1.2},  {d:3, b:1.6, a:1.4},  {d:3, b:1.8, a:1.5},  {d:3, b:1.5, a:1.3},  {d:3, b:1.4, a:1.4},  // 91-95 (Logic - Mất thời gian)
+  {d:3, b:1.7, a:1.5},  {d:1, b:-1.4, a:0.9}, {d:1, b:-1.2, a:0.9}, {d:2, b:0.4, a:1.1},  {d:1, b:-1.0, a:1.0}, // 96-100 (Bảng data dễ thở hơn)
+  {d:2, b:0.5, a:1.1},  {d:2, b:0.6, a:1.2},  {d:3, b:1.3, a:1.3},  {d:3, b:2.0, a:1.7},  {d:3, b:2.2, a:1.8},  // 101-105 (Q104,105 Hóa học tính bề mặt micelle siêu khó)
+  {d:1, b:-0.8, a:1.0}, {d:2, b:0.5, a:1.1},  {d:3, b:1.5, a:1.4},  {d:2, b:0.7, a:1.2},  {d:3, b:1.4, a:1.3},  // 106-110
+  {d:3, b:1.6, a:1.4},  {d:2, b:0.4, a:1.1},  {d:2, b:0.6, a:1.2},  {d:3, b:1.2, a:1.2},  {d:3, b:1.5, a:1.3},  // 111-115
+  {d:2, b:0.5, a:1.1},  {d:2, b:0.7, a:1.2},  {d:3, b:1.4, a:1.3},  {d:3, b:1.6, a:1.4},  {d:3, b:1.3, a:1.2}   // 116-120 (Kinh tế / Lạm phát)
+];
+
+const allSecs = [secI, secII, secIII, secIV];
+const allQs   = allSecs.flat(); // Tổng cộng 120 items
+
+/* ── State ── */
+const state = new Array(120).fill(null); // null=unmarked, 1=correct, 0=wrong
+
+/* ── IRT 2PL ALGORITHM (BẢN ĐÃ FIX CHẠM TRẦN ĐIỂM) ── */
+function p2pl(theta, a, b) {
+  // Xác suất trả lời đúng 1 câu dựa vào năng lực (theta), độ phân biệt (a) và độ khó (b)
+  return 1 / (1 + Math.exp(-a * (theta - b)));
+}
+
+function estimateTheta(qs, answers) {
+  const answered = qs.map((q, i) => ({...q, u: answers[i]})).filter(x => x.u !== null);
+  if (!answered.length) return null;
+
+  // Trường hợp đặc biệt: toàn đúng hoặc toàn sai
+  const allCorrect = answered.every(x => x.u === 1);
+  const allWrong   = answered.every(x => x.u === 0);
+  
+  // Nới rộng trần giới hạn năng lực lên 3.5 để giải quyết hiệu ứng chạm trần
+  if (allCorrect) return  3.5; 
+  if (allWrong)   return -3.5;
+
+  let theta = 0; // Giá trị khởi tạo năng lực
+  
+  // Dùng phương pháp lặp Newton-Raphson để ước lượng Maximum Likelihood (MLE) của Theta
+  for (let iter = 0; iter < 80; iter++) {
+    let num = 0, den = 0;
+    for (const r of answered) {
+      const pv = p2pl(theta, r.a, r.b);
+      const qv = 1 - pv;
+      num += r.a * (r.u - pv);           // Đạo hàm bậc 1
+      den += r.a * r.a * pv * qv;        // Đạo hàm bậc 2
+    }
+    if (den < 1e-9) break;
+    const delta = num / den;
+    theta += delta;
+    
+    // Chặn theta trong khoảng [-4, 4] để tránh lỗi vô cực
+    theta = Math.max(-4, Math.min(4, theta));
+    if (Math.abs(delta) < 1e-8) break; // Hội tụ thì dừng
+  }
+  return isNaN(theta) ? 0 : theta;
+}
+
+function thetaToScore(theta, max = 300) {
+  // Đổi công thức: Trải dài dải Theta từ [-3.5 đến 3.5] thay vì [-3 đến 3]
+  // Theo công thức: (theta + 3.5) / 7
+  return Math.round(Math.max(0, Math.min(max, max * (theta + 3.5) / 7)));
+}
+
+/* ── Render Giao diện ── */
+function buildUI() {
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+  let globalIdx = 0;
+
+  allSecs.forEach((secQs, si) => {
+    const start  = si * 30 + 1;
+    const eCount = secQs.filter(q => q.d === 1).length;
+    const mCount = secQs.filter(q => q.d === 2).length;
+    const hCount = secQs.filter(q => q.d === 3).length;
+
+    const card = document.createElement('div');
+    card.className = 'sec-card';
+    card.innerHTML = `
+      <div class="sec-head">
+        <div class="sec-head-left">
+          <div class="sec-bullet"></div>
+          <span class="sec-name">${SECS[si].name}</span>
+        </div>
+        <div class="sec-info">
+          <span class="sec-theta" id="theta-${si}">θ = —</span>
+          <span class="sec-pts empty" id="pts-${si}">—</span>
+        </div>
+      </div>
+      <div class="diff-chips">
+        <span class="chip e">🟢 Dễ: ${eCount}</span>
+        <span class="chip m">🟡 Vừa: ${mCount}</span>
+        <span class="chip h">🔴 Khó: ${hCount}</span>
+        <span class="chip-hint">
+          <span class="hint-item"><span class="hint-dot" style="background:var(--correct)"></span>Click 1 lần = Đúng</span>
+          <span class="hint-item"><span class="hint-dot" style="background:var(--wrong)"></span>Click 2 lần = Sai</span>
+          <span class="hint-item"><span class="hint-dot" style="background:var(--border)"></span>Click 3 lần = Xóa</span>
+        </span>
+      </div>
+      <div class="q-grid" id="grid-${si}"></div>
+    `;
+    main.appendChild(card);
+
+    const grid = card.querySelector(`#grid-${si}`);
+    secQs.forEach((q, qi) => {
+      const idx = globalIdx++;
+      const btn = document.createElement('div');
+      btn.className = `q ${['','e','m','h'][q.d]}`;
+      btn.id = `q-${idx}`;
+      btn.innerHTML = `<span class="q-n">${start + qi}</span><span class="q-d">${['','Dễ','Vừa','Khó'][q.d]}</span>`;
+      btn.addEventListener('click', () => handleClick(idx, si));
+      grid.appendChild(btn);
+    });
+  });
+
+  // Footer
+  const footer = document.createElement('div');
+  footer.className = 'footer-note';
+  footer.innerHTML = `
+    ⚠️ <strong>Dữ liệu áp dụng riêng cho Đề V-ACT Số 4.</strong><br>
+    Theo phân tích của AI, đề này có mức độ phân hóa và độ khó <strong>rất cao</strong> (đặc biệt ở phần Toán và Tư duy Khoa học).<br>
+    Do đó, nếu bạn làm sai những câu cực khó, số điểm bị trừ sẽ ít hơn so với đề bình thường. <em>(Đã Fix lỗi 29/30 câu)</em>
+  `;
+  main.appendChild(footer);
+}
+
+function handleClick(idx, si) {
+  const cur = state[idx];
+  state[idx] = cur === null ? 1 : cur === 1 ? 0 : null;
+  const btn = document.getElementById(`q-${idx}`);
+  const q   = allQs[idx];
+  const dClass = ['','e','m','h'][q.d];
+  if      (state[idx] === 1) btn.className = `q ${dClass} correct`;
+  else if (state[idx] === 0) btn.className = `q ${dClass} wrong`;
+  else                       btn.className = `q ${dClass}`;
+  recalc(si);
+  updateProgress();
+}
+
+function recalc(si) {
+  const start  = si * 30;
+  const secQs  = allQs.slice(start, start + 30);
+  const secSt  = state.slice(start, start + 30);
+
+  const theta = estimateTheta(secQs, secSt);
+
+  const ptsEl   = document.getElementById(`pts-${si}`);
+  const thetaEl = document.getElementById(`theta-${si}`);
+  const scEl    = document.getElementById(`sc-${si}`);
+
+  if (theta === null) {
+    ptsEl.textContent   = '—';
+    ptsEl.className     = 'sec-pts empty';
+    thetaEl.textContent = 'θ = —';
+    scEl.textContent    = '—';
+    scEl.closest('.sc-block')?.classList.remove('active');
+  } else {
+    const score = thetaToScore(theta, 300);
+    ptsEl.textContent   = score;
+    ptsEl.className     = 'sec-pts';
+    thetaEl.textContent = `θ = ${theta.toFixed(3)}`;
+    scEl.textContent    = score;
+    scEl.closest('.sc-block')?.classList.add('active');
+  }
+
+  /* Tính tổng điểm 4 phần */
+  let total = 0, hasAny = false;
+  for (let s = 0; s < 4; s++) {
+    const st = state.slice(s * 30, s * 30 + 30);
+    if (st.some(v => v !== null)) {
+      hasAny = true;
+      const qs = allQs.slice(s * 30, s * 30 + 30);
+      const t  = estimateTheta(qs, st);
+      total += t !== null ? thetaToScore(t, 300) : 0;
+    }
+  }
+  document.getElementById('sc-total').textContent = hasAny ? total : '—';
+}
+
+function updateProgress() {
+  const done = state.filter(v => v !== null).length;
+  const pct  = Math.round(done / 120 * 100);
+  document.getElementById('prog').style.width      = pct + '%';
+  document.getElementById('prog-text').textContent = `${done} / 120 câu (${pct}%)`;
+}
+
+function resetAll() {
+  state.fill(null);
+  document.querySelectorAll('.q').forEach(btn => {
+    btn.className = btn.className.replace(' correct','').replace(' wrong','');
+  });
+  for (let s = 0; s < 4; s++) {
+    document.getElementById(`sc-${s}`).textContent    = '—';
+    document.getElementById(`sc-${s}`).closest('.sc-block')?.classList.remove('active');
+    document.getElementById(`pts-${s}`).textContent   = '—';
+    document.getElementById(`pts-${s}`).className     = 'sec-pts empty';
+    document.getElementById(`theta-${s}`).textContent = 'θ = —';
+  }
+  document.getElementById('sc-total').textContent = '—';
+  document.getElementById('prog').style.width      = '0%';
+  document.getElementById('prog-text').textContent = '0 / 120 câu (0%)';
+}
+
+buildUI();
+</script>
+
+</body>
+</html>
