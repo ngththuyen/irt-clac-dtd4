@@ -1,479 +1,640 @@
 <!DOCTYPE html>
-<html lang="vi" data-theme="dark">
+<html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ước lượng điểm ĐGNL V-ACT Đề 4 · IRT 2PL</title>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-/* ── Theme tokens ── */
-:root[data-theme="dark"] {
-  --bg:        #0f1117;
-  --surface:   #1a1d27;
-  --surface2:  #222535;
-  --border:    #2e3347;
-  --text:      #e8eaf6;
-  --muted:     #7b82a0;
-  --accent:    #ff6b6b; /* Đổi màu chủ đạo sang đỏ cam cho Đề V-ACT */
-  --accent-glow: rgba(255, 107, 107, 0.18);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân Tích Ma Trận ĐGNL ĐHQG-HCM 2026 (Đề Chính Thức)</title>
+    
+    <!-- Phông chữ Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX (fix lỗi LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 
-  --easy-bg:   rgba(34,197,94,.12);  --easy-text: #4ade80; --easy-border: rgba(74,222,128,.25);
-  --med-bg:    rgba(250,204,21,.10); --med-text:  #fbbf24; --med-border:  rgba(251,191,36,.25);
-  --hard-bg:   rgba(239,68,68,.12);  --hard-text: #f87171; --hard-border: rgba(248,113,113,.25);
+    <style>
+        :root {
+            --bg-base: #0b0914; 
+            --bg-surface: rgba(21, 18, 33, 0.6); 
+            --bg-surface-solid: #151221;
+            --bg-hover: rgba(167, 139, 250, 0.1);
+            --primary: #c084fc;
+            --primary-light: #e9d5ff;
+            --primary-dark: #9333ea;
+            --primary-border: rgba(192, 132, 252, 0.25);
+            --primary-glow: rgba(192, 132, 252, 0.15);
+            --text-main: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #818cf8; 
+            --border-color: rgba(255, 255, 255, 0.08);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --lvl-1: #6ee7b7; 
+            --lvl-2: #fcd34d; 
+            --lvl-3: #fca5a5; 
+        }
 
-  --correct:        #22c55e; --correct-glow: rgba(34,197,94,.25);
-  --wrong:          #ef4444; --wrong-glow:   rgba(239,68,68,.25);
-  --shadow:    0 4px 24px rgba(0,0,0,.4);
-  --shadow-sm: 0 1px 4px  rgba(0,0,0,.3);
-}
-:root[data-theme="light"] {
-  --bg:        #f0f2f8;
-  --surface:   #ffffff;
-  --surface2:  #f5f7ff;
-  --border:    #dde1f0;
-  --text:      #1a1d2e;
-  --muted:     #6b7280;
-  --accent:    #e03131;
-  --accent-glow: rgba(224, 49, 49, 0.12);
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  --easy-bg:   #dcfce7; --easy-text: #15803d; --easy-border: #86efac;
-  --med-bg:    #fef9c3; --med-text:  #854d0e; --med-border:  #fde047;
-  --hard-bg:   #fee2e2; --hard-text: #991b1b; --hard-border: #fca5a5;
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(267, 39%, 16%, 1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(258, 45%, 14%, 1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-  --correct:        #16a34a; --correct-glow: rgba(22,163,74,.2);
-  --wrong:          #dc2626; --wrong-glow:   rgba(220,38,38,.2);
-  --shadow:    0 4px 24px rgba(0,0,0,.08);
-  --shadow-sm: 0 1px 4px  rgba(0,0,0,.06);
-}
+        /* ==================== HEADER ==================== */
+        .header {
+            padding: 4rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            backdrop-filter: blur(16px);
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #e9d5ff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            font-weight: 400;
+            max-width: 700px;
+            margin: 0 auto;
+        }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Be Vietnam Pro', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; min-height: 100vh; transition: background .3s, color .3s; }
-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); backdrop-filter: blur(12px); }
-.header-left { display: flex; align-items: center; gap: 12px; }
-.logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), #ff922b); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; box-shadow: 0 0 16px var(--accent-glow); }
-.header-left h1 { font-size: 14px; font-weight: 700; letter-spacing: -.02em; }
-.header-left p { font-size: 11px; color: var(--muted); margin-top: 1px; }
-.header-right { display: flex; gap: 8px; align-items: center; }
-.legend-items { display: flex; gap: 10px; font-size: 11px; margin-right: 4px; }
-.leg { display: flex; align-items: center; gap: 5px; color: var(--muted); }
-.leg-sq { width: 8px; height: 8px; border-radius: 50%; }
-.btn { font-family: inherit; font-size: 12px; font-weight: 500; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 6px; }
-.btn:hover { background: var(--border); color: var(--text); }
-.btn-theme { width: 36px; height: 36px; padding: 0; justify-content: center; border-radius: 10px; font-size: 16px; }
-.btn-reset { color: var(--wrong); border-color: var(--wrong-glow); }
-.btn-reset:hover { background: var(--wrong-glow); }
-#scorebar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: grid; grid-template-columns: auto 1px repeat(4, 1fr); gap: 0; }
-.sc-divider { background: var(--border); margin: 12px 0; }
-.sc-block { text-align: center; padding: 12px 16px; position: relative; }
-.sc-block + .sc-block::before { content: ''; position: absolute; left: 0; top: 20%; bottom: 20%; width: 1px; background: var(--border); }
-.sc-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-.sc-value { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 600; color: var(--text); transition: all .3s; line-height: 1; }
-.sc-max { font-size: 10px; color: var(--muted); margin-top: 3px; }
-.sc-block.total { padding: 12px 24px; background: linear-gradient(135deg, rgba(255,107,107,.06), rgba(255,146,43,.06)); }
-.sc-block.total .sc-value { font-size: 32px; background: linear-gradient(135deg, var(--accent), #ff922b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.sc-block.active .sc-value { color: var(--accent); }
-#prog-wrap { background: var(--surface); border-bottom: 1px solid var(--border); padding: 8px 24px; display: flex; align-items: center; gap: 12px; }
-.prog-bar { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
-.prog-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #ff922b); border-radius: 2px; transition: width .4s cubic-bezier(.4,0,.2,1); width: 0%; box-shadow: 0 0 8px var(--accent-glow); }
-#prog-text { font-size: 11px; color: var(--muted); white-space: nowrap; font-family: 'JetBrains Mono', monospace; }
-main { max-width: 1000px; margin: 0 auto; padding: 20px 16px 60px; }
-.sec-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 16px; overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow .2s; }
-.sec-card:hover { box-shadow: var(--shadow); }
-.sec-head { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
-.sec-head-left { display: flex; align-items: center; gap: 10px; }
-.sec-bullet { width: 4px; height: 20px; border-radius: 2px; background: linear-gradient(to bottom, var(--accent), #ff922b); }
-.sec-name { font-size: 13px; font-weight: 700; letter-spacing: -.01em; }
-.sec-info { display: flex; gap: 10px; align-items: center; }
-.sec-theta { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; background: var(--surface2); border: 1px solid var(--border); padding: 2px 8px; border-radius: 6px; }
-.sec-pts { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; background: linear-gradient(135deg, var(--accent), #ff922b); color: #fff; padding: 3px 12px; border-radius: 20px; min-width: 56px; text-align: center; box-shadow: 0 0 12px var(--accent-glow); }
-.sec-pts.empty { background: var(--surface2); color: var(--muted); box-shadow: none; }
-.diff-chips { display: flex; gap: 6px; font-size: 10px; padding: 8px 18px; background: var(--surface2); border-bottom: 1px solid var(--border); align-items: center; }
-.chip { padding: 2px 10px; border-radius: 20px; font-weight: 600; letter-spacing: .01em; border: 1px solid; }
-.chip.e { background: var(--easy-bg); color: var(--easy-text); border-color: var(--easy-border); }
-.chip.m { background: var(--med-bg); color: var(--med-text); border-color: var(--med-border); }
-.chip.h { background: var(--hard-bg); color: var(--hard-text); border-color: var(--hard-border); }
-.chip-hint { margin-left: auto; font-size: 10px; color: var(--muted); display: flex; gap: 12px; }
-.hint-item { display: flex; align-items: center; gap: 4px; }
-.hint-dot { width: 6px; height: 6px; border-radius: 50%; }
-.q-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; padding: 14px 18px; }
-.q { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; border: 1.5px solid var(--border); cursor: pointer; user-select: none; transition: all .12s cubic-bezier(.4,0,.2,1); position: relative; background: var(--surface2); }
-.q:hover { border-color: var(--accent); transform: translateY(-2px) scale(1.04); box-shadow: 0 4px 12px var(--accent-glow); }
-.q:active { transform: scale(.96); }
-.q-n { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--text); line-height: 1; }
-.q-d { font-size: 7px; margin-top: 3px; font-weight: 700; padding: 1px 5px; border-radius: 8px; letter-spacing: .03em; }
-.q.e .q-d { background: var(--easy-bg); color: var(--easy-text); }
-.q.m .q-d { background: var(--med-bg); color: var(--med-text); }
-.q.h .q-d { background: var(--hard-bg); color: var(--hard-text); }
-.q.correct { background: var(--correct); border-color: var(--correct); box-shadow: 0 0 12px var(--correct-glow); }
-.q.correct .q-n { color: #fff; }
-.q.correct .q-d { background: rgba(255,255,255,.2); color: rgba(255,255,255,.9); }
-.q.correct:hover { opacity: .9; border-color: var(--correct); }
-.q.wrong { background: var(--wrong); border-color: var(--wrong); box-shadow: 0 0 12px var(--wrong-glow); }
-.q.wrong .q-n { color: #fff; }
-.q.wrong .q-d { background: rgba(255,255,255,.2); color: rgba(255,255,255,.9); }
-.q.wrong:hover { opacity: .9; border-color: var(--wrong); }
-.footer-note { text-align: center; font-size: 11px; color: var(--muted); margin-top: 32px; line-height: 2; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
-@keyframes pop { 0% { transform: scale(.92); opacity: .6; } 60% { transform: scale(1.06); } 100% { transform: scale(1); opacity: 1; } }
-.q.correct, .q.wrong { animation: pop .18s ease forwards; }
-@media (max-width: 640px) { .q-grid { grid-template-columns: repeat(6, 1fr); gap: 5px; } #scorebar { grid-template-columns: 1fr 1px 1fr 1px 1fr; grid-template-rows: auto auto; } .sc-block.total { grid-column: 1 / -1; border-bottom: 1px solid var(--border); } .sc-divider { display: none; } header { padding: 0 14px; } .header-left h1 { font-size: 12px; } .chip-hint { display: none; } }
-@media (max-width: 400px) { .q-grid { grid-template-columns: repeat(5, 1fr); } }
-[data-theme="dark"] #icon-sun { display: none; }
-[data-theme="light"] #icon-moon { display: none; }
-.btn svg { flex-shrink: 0; }
-</style>
+        /* ==================== CONTAINER ==================== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        /* ==================== TABS (ĐÃ TỐI ƯU) ==================== */
+        .tabs-nav {
+            display: flex;
+            flex-wrap: wrap;           /* Cho phép xuống dòng khi màn hình nhỏ */
+            gap: 10px;
+            margin-bottom: 3rem;
+        }
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 12px 22px;
+            border-radius: 100px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: var(--transition);
+            backdrop-filter: blur(8px);
+            flex-shrink: 0;
+        }
+        .tab-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-main);
+            border-color: var(--primary-border);
+        }
+        .tab-btn.active {
+            background: var(--primary-glow);
+            color: var(--primary-light);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        /* ==================== PANELS ==================== */
+        .panel {
+            display: none;
+            background: var(--bg-surface-solid);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .panel.active {
+            display: block;
+            animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 24px;
+            background-color: var(--primary);
+            margin-right: 16px;
+            border-radius: 4px;
+        }
+
+        .sub-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 3rem 0 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* ==================== TABLE & CARD ==================== */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-bottom: 2.5rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 18px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        th {
+            background: rgba(192, 132, 252, 0.05);
+            color: var(--primary-light);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        tr:hover td { background: rgba(255, 255, 255, 0.02); }
+        .col-highlight {
+            color: var(--text-main);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 6px;
+            font-weight: 700;
+            margin: 2px 4px 2px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+        .badge.lvl-1 { color: var(--lvl-1); border-color: rgba(110, 231, 183, 0.4); }
+        .badge.lvl-2 { color: var(--lvl-2); border-color: rgba(252, 211, 77, 0.4); }
+        .badge.lvl-3 { color: var(--lvl-3); border-color: rgba(252, 165, 165, 0.4); }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 4px solid var(--border-color);
+            padding: 1.75rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            margin: 2rem 0;
+        }
+        .info-box.accent {
+            background: var(--primary-glow);
+            border-left-color: var(--primary);
+        }
+        .info-box p {
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 14.5px;
+        }
+        .info-box strong { color: var(--primary-light); font-weight: 600; }
+
+        .custom-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+        .custom-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 14px;
+            font-size: 14.5px;
+            color: var(--text-secondary);
+        }
+        .custom-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 6px;
+            height: 6px;
+            background-color: var(--primary);
+            border-radius: 50%;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 2rem;
+        }
+        .card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            transition: var(--transition);
+        }
+        .card:hover {
+            border-color: var(--primary-border);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .card h4 {
+            color: var(--primary-light);
+            font-size: 1.15rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .panel { padding: 1.5rem; }
+            .header { padding: 3rem 1rem; }
+            .header h1 { font-size: 1.5rem; }
+            .tab-btn { padding: 10px 18px; font-size: 13px; }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <div class="logo-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" width="20" height="20">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
-      </svg>
+    <header class="header">
+        <h1>Phân Tích Ma Trận ĐGNL ĐHQG-HCM 2026</h1>
+        <p>Phân tích chuyên sâu dựa trên Đề án 2026 và ĐỀ CHÍNH THỨC ĐỢT 1</p>
+    </header>
+
+    <div class="container">
+        <!-- TABS NAVIGATION -->
+        <nav class="tabs-nav">
+            <button class="tab-btn active" data-target="overview">TỔNG QUAN & QUY CHẾ</button>
+            <button class="tab-btn" data-target="viet">NGÔN NGỮ TIẾNG VIỆT</button>
+            <button class="tab-btn" data-target="eng">NGÔN NGỮ TIẾNG ANH</button>
+            <button class="tab-btn" data-target="math">TOÁN HỌC (CHI TIẾT)</button>
+            <button class="tab-btn" data-target="science">LOGIC & KHOA HỌC</button>
+            <button class="tab-btn" data-target="irt">MÔ HÌNH IRT 2PL</button>
+        </nav>
+
+        <!-- PANEL: TỔNG QUAN -->
+        <main id="overview" class="panel active">
+            <h2 class="section-title">Cấu Trúc Bài Thi Theo Đề Án 2026</h2>
+            <div class="grid-2" style="margin-bottom: 3rem;">
+                <div class="card">
+                    <h4>THÔNG SỐ NỀN TẢNG</h4>
+                    <ul class="custom-list">
+                        <li><strong>Số lượng câu hỏi:</strong> 120 câu trắc nghiệm đa lựa chọn (4 phương án).</li>
+                        <li><strong>Thời gian làm bài:</strong> 150 phút liên tục.</li>
+                        <li><strong>Thang điểm:</strong> 1200 điểm tổng.</li>
+                        <li><strong>Phạm vi kiến thức:</strong> Nằm trong chương trình THPT (GDPT 2018).</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>PHÂN BỔ ĐỘ KHÓ & TỶ LỆ</h4>
+                    <ul class="custom-list">
+                        <li><strong>Mức độ 1 (Nhận biết - 30%):</strong> Đánh giá khả năng ghi nhớ, tái hiện thông tin, định nghĩa cơ bản.</li>
+                        <li><strong>Mức độ 2 (Thông hiểu - 40%):</strong> Giải thích ý nghĩa, so sánh, đối chiếu thông tin dữ kiện.</li>
+                        <li><strong>Mức độ 3 (Vận dụng - 30%):</strong> Tổng hợp, phân tích, giải quyết vấn đề qua tính toán/suy luận.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Phần thi</th>
+                            <th>Phân môn</th>
+                            <th>Số lượng</th>
+                            <th>Định hướng đánh giá</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2" class="col-highlight">Phần 1: Ngôn ngữ</td>
+                            <td>Tiếng Việt</td>
+                            <td>30 câu</td>
+                            <td>Đọc hiểu văn bản (văn học/nghị luận), ngữ pháp, từ vựng.</td>
+                        </tr>
+                        <tr>
+                            <td>Tiếng Anh</td>
+                            <td>30 câu</td>
+                            <td>Ngữ pháp, từ vựng, viết lại câu và đọc hiểu 2 bài passage dài.</td>
+                        </tr>
+                        <tr>
+                            <td class="col-highlight">Phần 2: Toán học</td>
+                            <td>Toán THPT</td>
+                            <td>30 câu</td>
+                            <td>Đại số, Hình học, Giải tích, Tổ hợp Xác suất, Dãy số, Lý thuyết đồ thị.</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" class="col-highlight">Phần 3: Khoa học</td>
+                            <td>Logic & Số liệu</td>
+                            <td>12 câu</td>
+                            <td>Tư duy logic mệnh đề, phân tích biểu đồ, bảng biểu thống kê.</td>
+                        </tr>
+                        <tr>
+                            <td>Tự nhiên & Xã hội</td>
+                            <td>18 câu</td>
+                            <td>Suy luận khoa học dựa trên đoạn văn bản (Lý, Hóa, Sinh, Sử, Địa, Luật).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- PANEL: TIẾNG VIỆT -->
+        <main id="viet" class="panel">
+            <h2 class="section-title">Phần 1.1: Ngôn Ngữ Tiếng Việt (Câu 1 – 30)</h2>
+            <div class="info-box">
+                <p>Khảo sát trên Đề chính thức Đợt 1, Tiếng Việt chia làm 2 phần rạch ròi: <strong>Câu 1-15</strong> hỏi kiến thức đơn lẻ (Thể loại, từ vựng, ngữ pháp, tu từ); <strong>Câu 16-30</strong> chia cho các cụm đọc hiểu văn bản dài.</p>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dạng bài / Chủ đề</th>
+                            <th>Trích xuất dữ liệu từ Đề chính thức Đợt 1 - 2026</th>
+                            <th>Mức độ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-highlight">Văn học dân gian & Trung đại</td>
+                            <td>Xác định thể loại: Thần thoại (Apollon & Daphné), Sự tích con người. Hiểu biết về Kịch/Chèo (Vũ Như Tô, Lưu Bình Dương Lễ).</td>
+                            <td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span></td>
+                        </tr>
+                        <tr>
+                            <td class="col-highlight">Từ vựng & Ngữ pháp</td>
+                            <td>Giải nghĩa từ (bỉ sắc tư phong, hồng quân). Nhận diện lỗi: Sai chính tả, sai quy chiếu, câu mơ hồ. Phân loại từ láy/từ ghép.</td>
+                            <td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span></td>
+                        </tr>
+                        <tr>
+                            <td class="col-highlight">Biện pháp tu từ</td>
+                            <td>Phân tích tác dụng của: Ẩn dụ, Chêm xen (Thơ Xuân Quỳnh), Điệp cấu trúc (Thơ Nguyễn Khuyến).</td>
+                            <td><span class="badge lvl-2">MỨC 2</span></td>
+                        </tr>
+                        <tr>
+                            <td class="col-highlight">Đọc hiểu: Tùy bút / Truyện ngắn</td>
+                            <td>Văn bản về Hoa rau muống, Truyện ngắn "Phiên chợ Giát", Bến Bình Đông. Xác định nội dung chính, tâm trạng nhân vật, phong cách ngôn ngữ.</td>
+                            <td><span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></td>
+                        </tr>
+                        <tr>
+                            <td class="col-highlight">Đọc hiểu: Nghị luận văn học</td>
+                            <td>Văn bản lý luận sâu (Đoạn trích "Học văn để làm gì" của Huỳnh Như Phương). Xác định luận đề, thao tác lập luận, quan điểm phản biện.</td>
+                            <td><span class="badge lvl-3">MỨC 3</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- PANEL: TIẾNG ANH -->
+        <main id="eng" class="panel">
+            <h2 class="section-title">Phần 1.2: Ngôn Ngữ Tiếng Anh (Câu 31 – 60)</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dạng bài</th>
+                            <th>Số lượng</th>
+                            <th>Trọng tâm Kiến thức (Đề chính thức Đợt 1)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-highlight">Điền từ (Fill in the blank)</td>
+                            <td>5 câu</td>
+                            <td>Collocations (kết hợp từ), Từ loại, Thì động từ cơ bản, Giới từ, Liên từ chỉ nguyên nhân/kết quả (because, although).</td>
+                        </tr>
+                        <tr>
+                            <td class="col-highlight">Tìm lỗi sai (Error Identification)</td>
+                            <td>5 câu</td>
+                            <td>Lỗi hòa hợp Chủ - Vị (S-V agreement), Lỗi đại từ quan hệ (who thay vì which), Lỗi đại từ sở hữu (her thay vì their).</td>
+                        </tr>
+                        <tr>
+                            <td class="col-highlight">Viết lại câu (Sentence Restatement)</td>
+                            <td>5 câu</td>
+                            <td>Câu điều kiện loại 2/3 (If/Unless), Mệnh đề nhượng bộ, Câu tường thuật (Reported speech), Câu so sánh.</td>
+                        </tr>
+                        <tr>
+                            <td class="col-highlight">Đọc hiểu 1 (Reading Comp 1)</td>
+                            <td>7 - 8 câu</td>
+                            <td>Chủ đề Văn hóa / Xã hội (Ví dụ: Sự tiến hóa của văn hóa Rap, Liệu pháp Animal therapy). Kỹ năng: Main Idea, Reference (it/they/those).</td>
+                        </tr>
+                        <tr>
+                            <td class="col-highlight">Đọc hiểu 2 (Reading Comp 2)</td>
+                            <td>7 - 8 câu</td>
+                            <td>Chủ đề Môi trường / Khoa học (Ví dụ: Biến đổi khí hậu làm tăng sức mạnh Bão, Năng lượng tái tạo). Kỹ năng: Inference, True/False/NOT stated, Từ vựng trong ngữ cảnh.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- PANEL: TOÁN HỌC -->
+        <main id="math" class="panel">
+            <h2 class="section-title">Phần 2: Toán Học - Phân Tích Chuyên Sâu (Câu 61 – 90)</h2>
+            <div class="info-box accent">
+                <p>Khẳng định từ Đề chính thức Đợt 1 năm 2026: Phần Toán học được phân loại chính xác thành 5 nhóm nội dung. Cấu trúc chia rõ <strong>12 câu hỏi đơn lẻ (Câu 61 - 72)</strong> và <strong>18 câu hỏi cấu trúc theo Cụm (Câu 73 - 90)</strong>. Đây là vùng phân loại năng lực cực mạnh.</p>
+            </div>
+
+            <h3 class="sub-title">2.1. Phân Tích 12 Câu Hỏi Đơn Lẻ (61 - 72)</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Câu hỏi</th>
+                            <th>Nhóm nội dung</th>
+                            <th>Chủ đề cụ thể trong Đề chính thức Đợt 1</th>
+                            <th>Mức độ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Câu 61</strong></td><td class="col-highlight">(V) Hình học</td><td>Hình học phẳng: Thiết lập phương trình chu vi, diện tích hình vuông và hình chữ nhật để tìm độ dài cạnh.</td><td><span class="badge lvl-1">MỨC 1</span></td></tr>
+                        <tr><td><strong>Câu 62</strong></td><td class="col-highlight">(III) Khảo sát HS</td><td>Tiệm cận hàm số: Đồ thị $y = \frac{6-4x}{2x+3}$, tính diện tích hình chữ nhật tạo bởi 2 đường tiệm cận.</td><td><span class="badge lvl-2">MỨC 2</span></td></tr>
+                        <tr><td><strong>Câu 63</strong></td><td class="col-highlight">(I) Kỹ thuật giải</td><td>Bất phương trình chứa trị tuyệt đối: Giải BPT $|2x-3| > x+1$.</td><td><span class="badge lvl-2">MỨC 2</span></td></tr>
+                        <tr><td><strong>Câu 64</strong></td><td class="col-highlight">(I) Kỹ thuật giải</td><td><strong>Lý thuyết đồ thị (MỚI):</strong> Sơ đồ khu du lịch gồm 6 địa điểm A,B,C,D,E,F có các đường nối. Đếm số cách đi từ E đến F.</td><td><span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td><strong>Câu 65</strong></td><td class="col-highlight">(I) Kỹ thuật giải</td><td>Bất phương trình Logarit: Tìm tham số $m$ để BPT $\log_{\frac{1}{5}} m > \log_5(2x+3)$ có đúng 3 nghiệm nguyên.</td><td><span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td><strong>Câu 66</strong></td><td class="col-highlight">(I) Kỹ thuật giải</td><td><strong>Lý thuyết đồ thị:</strong> Một phân tử 8 nguyên tử có tổng 8 liên kết. Cho số liên kết của 7 nguyên tử, tìm số liên kết của nguyên tử thứ 8 (Bậc của đỉnh).</td><td><span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td><strong>Câu 67</strong></td><td class="col-highlight">(I) Kỹ thuật giải</td><td>Bất phương trình phân thức: Giải BPT $\frac{x^2+x+3}{x^2-4} \ge 1$ và tìm giao của tập nghiệm với một khoảng cho trước.</td><td><span class="badge lvl-2">MỨC 2</span></td></tr>
+                        <tr><td><strong>Câu 68</strong></td><td class="col-highlight">(III) Khảo sát HS</td><td>Tích phân chứa tham số: Giải phương trình $\int_1^3 ((m+1)x^m + 1)dx = 28$ để tìm $m$.</td><td><span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td><strong>Câu 69</strong></td><td class="col-highlight">(III) Khảo sát HS</td><td>Giới hạn hàm số (Ứng dụng bài toán lợi nhuận): Xét $\lim_{x \to +\infty} (\sqrt{x^2-x+5} - \sqrt{x^2+2x+2})$.</td><td><span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td><strong>Câu 70</strong></td><td class="col-highlight">(III) Khảo sát HS</td><td>Ứng dụng Tích phân: Tính diện tích khu vườn giới hạn bởi hai đường cong $y = \frac{1}{2}x^2$ và $y = \sqrt{2x}$.</td><td><span class="badge lvl-2">MỨC 2</span></td></tr>
+                        <tr><td><strong>Câu 71</strong></td><td class="col-highlight">(I) Kỹ thuật giải</td><td>Lượng giác: Nhận dạng tam giác ABC biết hệ thức $\frac{\tan B}{\tan C} = \frac{\sin^2 B}{\sin^2 C}$.</td><td><span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td><strong>Câu 72</strong></td><td class="col-highlight">(I) Kỹ thuật giải</td><td>Hệ phương trình Logarit: Giải hệ $\log_x(y^{5x}) = 20$ và $\log_y(x^{8y}) = 20$ để tính $xy$.</td><td><span class="badge lvl-3">MỨC 3</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="sub-title">2.4. Phân Tích 18 Câu Hỏi Cụm Dữ Kiện (73 - 90)</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vị trí Cụm</th>
+                            <th>Nhóm nội dung</th>
+                            <th>Chủ đề & Kỹ năng yêu cầu (Đề chính thức Đợt 1)</th>
+                            <th>Mức độ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Cụm 1<br>(73 - 74)</strong></td><td class="col-highlight">(V) Hình học</td><td><strong>Hình học Oxyz:</strong> Cho 3 điểm A, B, C. Tính độ dài đoạn thẳng. Viết phương trình mặt phẳng (ABC) và tìm tọa độ giao điểm với trục Ox.</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span></td></tr>
+                        <tr><td><strong>Cụm 2<br>(75 - 77)</strong></td><td class="col-highlight">(III) Khảo sát HS</td><td><strong>Hàm phân thức:</strong> Cho $y = \frac{-mx+1}{x-m}$. Tìm $m$ để GTLN trên đoạn [3;5] bằng -3. Xét tính đồng biến. Điểm cố định đồ thị luôn đi qua.</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td><strong>Cụm 3<br>(78 - 80)</strong></td><td class="col-highlight">(IV) Xác suất</td><td><strong>Tổ hợp / Xác suất:</strong> Có 6 ghế xếp thành hàng ngang. Xếp 6 học sinh (gồm 3 em lớp A, 2 em lớp B, 1 em lớp C). Đếm số cách xếp và tính xác suất lớp C ngồi cạnh lớp B.</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td><strong>Cụm 4<br>(81 - 82)</strong></td><td class="col-highlight">(I) Kỹ thuật giải</td><td><strong>Quy hoạch tuyến tính (Toán thực tế):</strong> Sản xuất sản phẩm mỹ nghệ từ nguyên liệu X và Y. Thiết lập hệ Bất phương trình ràng buộc số ngày công. Tìm Doanh thu lớn nhất.</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span></td></tr>
+                        <tr><td><strong>Cụm 5<br>(83 - 84)</strong></td><td class="col-highlight">(II) Dãy số</td><td><strong>Cấp số nhân lùi vô hạn:</strong> Bài toán thả quả bóng cao su từ độ cao 10m, mỗi lần nảy bằng 3/4 độ cao trước đó. Tính độ cao nảy lần 5 và Tổng quãng đường đến khi dừng hẳn.</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td><strong>Cụm 6<br>(85 - 87)</strong></td><td class="col-highlight">(V) Hình học</td><td><strong>Hình học không gian:</strong> Khối chóp S.ABCD đáy hình vuông, mặt bên SAB đều và vuông góc với đáy. Tìm hình chiếu, kiểm tra tính đúng/sai của các mệnh đề khoảng cách, tính khoảng cách từ điểm đến mặt phẳng.</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td><strong>Cụm 7<br>(88 - 90)</strong></td><td class="col-highlight">(V) Hình học</td><td><strong>Hình học phẳng Oxy:</strong> Tam giác ABC biết tọa độ 3 đỉnh. Tìm trung điểm, viết PT đường cao, lập PT đường tròn ngoại tiếp để tìm tọa độ tâm I.</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- PANEL: LOGIC & KHOA HỌC -->
+        <main id="science" class="panel">
+            <h2 class="section-title">Phần 3: Tư Duy Logic & Khoa Học (Câu 91 – 120)</h2>
+            <h3 class="sub-title">3.1. Logic & Phân Tích Số Liệu (12 câu)</h3>
+            <div class="grid-2" style="margin-bottom: 3rem;">
+                <div class="card">
+                    <h4>LOGIC MỆNH ĐỀ (91 - 96)</h4>
+                    <ul class="custom-list">
+                        <li><strong>Dữ kiện Đợt 1:</strong> Phân công lịch biên tập 7 bài viết (G, H, J, Q, R, S, Y) với các điều kiện thứ tự. Xếp lịch huấn luyện cho 5 nhân viên (M, N, P, Q, R) trong 7 ngày.</li>
+                        <li><strong>Kỹ năng:</strong> Phải lập bảng ma trận (Grid) ra giấy nháp. Phân biệt rõ loại câu hỏi "Có thể đúng" và "Phải đúng".</li>
+                        <li><strong>Mức độ:</strong> <span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>PHÂN TÍCH SỐ LIỆU (97 - 102)</h4>
+                    <ul class="custom-list">
+                        <li><strong>Dữ kiện Đợt 1:</strong> Bảng sản lượng mía đường của 6 nông trường. Biểu đồ cột ghép (trục kép) thể hiện Trị giá Hàng nhập khẩu & Xuất khẩu từ 1995-2000.</li>
+                        <li><strong>Kỹ năng:</strong> So sánh số liệu thô, tính Tỷ trọng %, tính phần trăm thay đổi (tăng/giảm) giữa các năm.</li>
+                        <li><strong>Mức độ:</strong> <span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="sub-title">3.2. Suy Luận Khoa Học Tự Nhiên & Xã Hội (18 câu)</h3>
+            <div class="info-box">
+                <p>Gồm 6 phân môn (Vật lý, Hóa học, Sinh học, Lịch sử, Địa lý, Pháp luật), mỗi môn 1 đoạn văn bản và 3 câu hỏi đi kèm. Mọi thông tin, định lý, công thức đều nằm sẵn trong văn bản.</p>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Phân môn</th>
+                            <th>Chủ đề Khảo sát (Đề chính thức Đợt 1)</th>
+                            <th>Mức độ đánh giá</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-highlight">Vật lý</td><td>Tính chất ánh sáng và <strong>Kính thiên văn James Webb</strong> ($E = \frac{hc}{\lambda}$). <strong>Máy biến áp</strong> (Tỷ lệ điện áp $U_1/U_2 = N_1/N_2$).</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span></td></tr>
+                        <tr><td class="col-highlight">Hóa học</td><td><strong>Nhiệt động học</strong> (Đồ thị $\Delta H$, $\Delta S$, $\Delta G$). Năng lượng riêng của Than.</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td class="col-highlight">Sinh học</td><td>Thấm màng tế bào dưới tác động nước thải. Quần thể cừu Tasmania.</td><td><span class="badge lvl-2">MỨC 2</span> <span class="badge lvl-3">MỨC 3</span></td></tr>
+                        <tr><td class="col-highlight">Lịch sử</td><td>Phong trào Văn hóa Phục hưng. Cải cách pháp luật triều Lê Thánh Tông.</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span></td></tr>
+                        <tr><td class="col-highlight">Địa lý</td><td>Dân số học Hoa Kỳ (Median age). Tăng trưởng GRDP tỉnh Quảng Ngãi.</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span></td></tr>
+                        <tr><td class="col-highlight">Pháp luật</td><td>Luật Bảo vệ Môi trường. Trách nhiệm xã hội trong khởi nghiệp.</td><td><span class="badge lvl-1">MỨC 1</span> <span class="badge lvl-2">MỨC 2</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- PANEL: IRT -->
+        <main id="irt" class="panel">
+            <h2 class="section-title">Mô Hình Chấm Điểm IRT 2 Tham Số (2PL)</h2>
+            <div class="info-box accent">
+                <p>Theo Đề án 2026, bài thi ĐGNL ĐHQG-HCM được chấm điểm tự động dựa trên <strong>Lý thuyết Ứng đáp câu hỏi (Item Response Theory - IRT) mô hình 2 tham số (2PL)</strong>.</p>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Cơ chế đánh giá của IRT 2PL</h4>
+                    <ul class="custom-list">
+                        <li><strong>Tham số Độ khó ($b$):</strong> Câu hỏi mức 3 có trọng số $b$ rất cao.</li>
+                        <li><strong>Tham số Độ phân biệt ($a$):</strong> Đo lường khả năng phân loại của câu hỏi.</li>
+                        <li><strong>Không trừ điểm sai:</strong> Sai không bị trừ trực tiếp nhưng ảnh hưởng đến ước lượng năng lực ($\theta$).</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Chiến thuật Tối ưu Hóa Điểm Số</h4>
+                    <ul class="custom-list">
+                        <li><strong>Bảo vệ "Lưới điểm cơ sở":</strong> Làm đúng 100% câu Mức 1.</li>
+                        <li><strong>Tấn công có mục tiêu:</strong> Tập trung cụm Toán và Logic.</li>
+                        <li><strong>Không bỏ trống:</strong> Đánh lụi 25% vẫn có kỳ vọng dương.</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
     </div>
-    <div>
-      <h1>Ước lượng điểm: ĐỀ V-ACT SỐ 4</h1>
-      <p>Mô hình IRT 2 tham số (2PL) · Đánh giá tự động</p>
-    </div>
-  </div>
-  <div class="header-right">
-    <div class="legend-items">
-      <span class="leg"><span class="leg-sq" style="background:var(--correct)"></span>Đúng</span>
-      <span class="leg"><span class="leg-sq" style="background:var(--wrong)"></span>Sai</span>
-    </div>
-    <button class="btn btn-theme" id="btn-theme" title="Đổi giao diện" onclick="toggleTheme()">
-      <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998z" />
-      </svg>
-      <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0z" />
-      </svg>
-    </button>
-    <button class="btn btn-reset" onclick="resetAll()">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="14" height="14">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-      </svg>
-      Làm lại
-    </button>
-  </div>
-</header>
 
-<div id="scorebar">
-  <div class="sc-block total">
-    <div class="sc-label">Tổng điểm</div>
-    <div class="sc-value" id="sc-total">—</div>
-    <div class="sc-max">/ 1200</div>
-  </div>
-  <div class="sc-divider"></div>
-  <div class="sc-block">
-    <div class="sc-label">Tiếng Việt</div>
-    <div class="sc-value" id="sc-0">—</div>
-    <div class="sc-max">/ 300</div>
-  </div>
-  <div class="sc-block">
-    <div class="sc-label">Tiếng Anh</div>
-    <div class="sc-value" id="sc-1">—</div>
-    <div class="sc-max">/ 300</div>
-  </div>
-  <div class="sc-block">
-    <div class="sc-label">Toán học</div>
-    <div class="sc-value" id="sc-2">—</div>
-    <div class="sc-max">/ 300</div>
-  </div>
-  <div class="sc-block">
-    <div class="sc-label">Tư duy KH</div>
-    <div class="sc-value" id="sc-3">—</div>
-    <div class="sc-max">/ 300</div>
-  </div>
-</div>
+    <!-- KaTeX Script -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 
-<div id="prog-wrap">
-  <div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
-  <span id="prog-text">0 / 120</span>
-</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const panels = document.querySelectorAll('.panel');
 
-<main id="main"></main>
+            function renderMath() {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '$', right: '$', display: false }
+                    ],
+                    throwOnError: false
+                });
+            }
 
-<script>
-/* ══════════════════════════════════════════════════════════════
-   Theme toggle
-══════════════════════════════════════════════════════════════ */
-function toggleTheme() {
-  const html = document.documentElement;
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-}
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    const targetId = this.getAttribute('data-target');
+                    tabs.forEach(t => t.classList.remove('active'));
+                    panels.forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                    const targetPanel = document.getElementById(targetId);
+                    if (targetPanel) targetPanel.classList.add('active');
+                    renderMath(); // Render lại công thức khi chuyển tab
+                });
+            });
 
-/* ══════════════════════════════════════════════════════════════
-   DỮ LIỆU ĐƯỢC ƯỚC TÍNH CHO ĐỀ V-ACT SỐ 4 (RẤT KHÓ)
-   - Do đề khó, phân bổ d=3 (Khó) nhiều hơn, tham số b bị đẩy lên cao.
-   - Các câu Toán học và Logic khoa học có b lên tới 2.0 - 2.5
-══════════════════════════════════════════════════════════════ */
-
-const SECS = [
-  { name: "I. Sử dụng ngôn ngữ — Tiếng Việt", id: 0 },
-  { name: "II. Sử dụng ngôn ngữ — Tiếng Anh",  id: 1 },
-  { name: "III. Toán học",                       id: 2 },
-  { name: "IV. Tư duy khoa học",                 id: 3 },
-];
-
-/* ══════════════════════════════════════════════════════════════
-   DỮ LIỆU ĐÃ CHUẨN HÓA THEO TỈ LỆ 9 DỄ - 12 VỪA - 9 KHÓ (MỖI PHẦN 30 CÂU)
-   - d: 1=Dễ (9 câu), 2=Vừa (12 câu), 3=Khó (9 câu)
-   - Tham số b: Dễ (-1.8 đến -0.8), Vừa (-0.4 đến 0.6), Khó (0.8 đến 1.6)
-   - Cụm Logic/Khoa học (Phần 4) tuân thủ mô-tuýp: Dễ -> Vừa -> Khó.
-══════════════════════════════════════════════════════════════ */
-
-// PHẦN 1: TIẾNG VIỆT (Q1 - Q30)
-// Dễ (9): 1, 2, 3, 10, 11, 16, 17, 20, 26
-// Vừa (12): 5, 6, 8, 12, 13, 18, 19, 21, 22, 24, 25, 28
-// Khó (9): 4, 7, 9, 14, 15, 23, 27, 29, 30
-const secI = [
-  {d:1, b:-1.5, a:0.9}, {d:1, b:-1.2, a:1.0}, {d:1, b:-1.0, a:1.0}, {d:3, b:1.2, a:1.3},  {d:2, b:0.3, a:1.1},  // 1-5
-  {d:2, b:0.4, a:1.2},  {d:3, b:1.4, a:1.4},  {d:2, b:0.2, a:1.0},  {d:3, b:1.3, a:1.2},  {d:1, b:-1.4, a:0.9}, // 6-10
-  {d:1, b:-0.9, a:1.0}, {d:2, b:0.5, a:1.1},  {d:2, b:0.1, a:1.0},  {d:3, b:1.5, a:1.3},  {d:3, b:1.4, a:1.4},  // 11-15
-  {d:1, b:-1.2, a:1.0}, {d:1, b:-0.8, a:1.1}, {d:2, b:0.4, a:1.2},  {d:2, b:0.3, a:1.1},  {d:1, b:-1.1, a:0.9}, // 16-20
-  {d:2, b:0.6, a:1.2},  {d:2, b:0.2, a:1.1},  {d:3, b:1.1, a:1.2},  {d:2, b:0.5, a:1.1},  {d:2, b:0.4, a:1.2},  // 21-25
-  {d:1, b:-1.0, a:1.0}, {d:3, b:1.3, a:1.3},  {d:2, b:0.5, a:1.1},  {d:3, b:1.6, a:1.4},  {d:3, b:1.5, a:1.5}   // 26-30
-];
-
-// PHẦN 2: TIẾNG ANH (Q31 - Q60)
-// Dễ (9): 31, 32, 35, 36, 37, 40, 46, 47, 54
-// Vừa (12): 33, 34, 38, 41, 42, 48, 49, 50, 53, 55, 56, 57
-// Khó (9): 39, 43, 44, 45, 51, 52, 58, 59, 60
-const secII = [
-  {d:1, b:-1.4, a:1.0}, {d:1, b:-1.1, a:0.9}, {d:2, b:0.2, a:1.1},  {d:2, b:0.4, a:1.2},  {d:1, b:-1.3, a:1.0}, // 31-35
-  {d:1, b:-0.9, a:1.0}, {d:1, b:-1.0, a:0.9}, {d:2, b:0.3, a:1.1},  {d:3, b:1.2, a:1.3},  {d:1, b:-1.2, a:1.0}, // 36-40
-  {d:2, b:0.1, a:1.0},  {d:2, b:0.5, a:1.2},  {d:3, b:1.5, a:1.4},  {d:3, b:1.1, a:1.2},  {d:3, b:1.3, a:1.3},  // 41-45
-  {d:1, b:-0.8, a:1.1}, {d:1, b:-1.0, a:1.0}, {d:2, b:0.4, a:1.1},  {d:2, b:0.2, a:1.2},  {d:2, b:0.6, a:1.1},  // 46-50
-  {d:3, b:1.4, a:1.4},  {d:3, b:1.6, a:1.5},  {d:2, b:0.3, a:1.1},  {d:1, b:-0.9, a:1.0}, {d:2, b:0.4, a:1.1},  // 51-55
-  {d:2, b:0.5, a:1.2},  {d:2, b:0.3, a:1.1},  {d:3, b:1.3, a:1.3},  {d:3, b:1.4, a:1.4},  {d:3, b:1.5, a:1.3}   // 56-60
-];
-
-// PHẦN 3: TOÁN HỌC (Q61 - Q90)
-// Dễ (9): 61, 65, 66, 72, 73, 78, 80, 82, 88
-// Vừa (12): 62, 63, 67, 68, 70, 74, 75, 79, 83, 84, 86, 89
-// Khó (9): 64, 69, 71, 76, 77, 81, 85, 87, 90
-const secIII = [
-  {d:1, b:-1.1, a:0.9}, {d:2, b:0.4, a:1.2},  {d:2, b:0.5, a:1.1},  {d:3, b:1.4, a:1.4},  {d:1, b:-1.3, a:1.0}, // 61-65
-  {d:1, b:-0.9, a:1.0}, {d:2, b:0.3, a:1.1},  {d:2, b:0.6, a:1.2},  {d:3, b:1.5, a:1.3},  {d:2, b:0.4, a:1.2},  // 66-70
-  {d:3, b:1.6, a:1.5},  {d:1, b:-0.8, a:0.9}, {d:1, b:-1.2, a:1.0}, {d:2, b:0.2, a:1.1},  {d:2, b:0.5, a:1.2},  // 71-75
-  {d:3, b:1.3, a:1.4},  {d:3, b:1.2, a:1.2},  {d:1, b:-1.0, a:1.0}, {d:2, b:0.6, a:1.1},  {d:1, b:-1.4, a:0.9}, // 76-80
-  {d:3, b:1.4, a:1.3},  {d:1, b:-0.9, a:1.0}, {d:2, b:0.3, a:1.1},  {d:2, b:0.4, a:1.1},  {d:3, b:1.5, a:1.4},  // 81-85
-  {d:2, b:0.5, a:1.2},  {d:3, b:1.6, a:1.5},  {d:1, b:-1.5, a:0.9}, {d:2, b:0.6, a:1.2},  {d:3, b:1.4, a:1.3}   // 86-90
-];
-
-// PHẦN 4: TƯ DUY KHOA HỌC (Q91 - Q120)
-// 10 Cụm x 3 câu. Quy luật chung của mỗi cụm: Câu 1 Dễ, Câu 2 Vừa, Câu 3 Khó/Vừa.
-// Dễ (9): 91, 94, 97, 100, 103, 106, 109, 112, 115
-// Vừa (12): 92, 95, 98, 101, 104, 107, 110, 113, 114, 116, 118, 119
-// Khó (9): 93, 96, 99, 102, 105, 108, 111, 117, 120
-const secIV = [
-  {d:1, b:-1.2, a:1.0}, {d:2, b:0.4, a:1.2},  {d:3, b:1.4, a:1.3},  // 91-93 (Logic 1)
-  {d:1, b:-0.9, a:0.9}, {d:2, b:0.5, a:1.1},  {d:3, b:1.5, a:1.4},  // 94-96 (Logic 2)
-  {d:1, b:-1.5, a:1.0}, {d:2, b:0.3, a:1.1},  {d:3, b:1.2, a:1.2},  // 97-99 (Số liệu 1)
-  {d:1, b:-1.3, a:0.9}, {d:2, b:0.2, a:1.0},  {d:3, b:1.3, a:1.3},  // 100-102 (Số liệu 2)
-  {d:1, b:-1.0, a:1.0}, {d:2, b:0.6, a:1.2},  {d:3, b:1.6, a:1.4},  // 103-105 (Hóa học)
-  {d:1, b:-1.1, a:0.9}, {d:2, b:0.4, a:1.1},  {d:3, b:1.1, a:1.2},  // 106-108 (Vật lý)
-  {d:1, b:-1.4, a:1.0}, {d:2, b:0.5, a:1.1},  {d:3, b:1.4, a:1.3},  // 109-111 (Sinh học)
-  {d:1, b:-0.8, a:0.9}, {d:2, b:0.3, a:1.0},  {d:2, b:0.6, a:1.2},  // 112-114 (Lịch sử) - Cụm này có 2 câu Vừa
-  {d:1, b:-1.2, a:1.0}, {d:2, b:0.4, a:1.1},  {d:3, b:1.2, a:1.2},  // 115-117 (Địa lý)
-  {d:2, b:0.2, a:1.0},  {d:2, b:0.5, a:1.1},  {d:3, b:1.5, a:1.3}   // 118-120 (KT-PL) - Cụm này ko có câu Dễ
-];
-
-const allSecs = [secI, secII, secIII, secIV];
-const allQs   = allSecs.flat(); // Tổng cộng 120 items
-
-/* ── State ── */
-const state = new Array(120).fill(null); // null=unmarked, 1=correct, 0=wrong
-
-/* ── IRT 2PL ALGORITHM (BẢN ĐÃ FIX CHẠM TRẦN ĐIỂM) ── */
-function p2pl(theta, a, b) {
-  // Xác suất trả lời đúng 1 câu dựa vào năng lực (theta), độ phân biệt (a) và độ khó (b)
-  return 1 / (1 + Math.exp(-a * (theta - b)));
-}
-
-function estimateTheta(qs, answers) {
-  const answered = qs.map((q, i) => ({...q, u: answers[i]})).filter(x => x.u !== null);
-  if (!answered.length) return null;
-
-  // Trường hợp đặc biệt: toàn đúng hoặc toàn sai
-  const allCorrect = answered.every(x => x.u === 1);
-  const allWrong   = answered.every(x => x.u === 0);
-  
-  // Nới rộng trần giới hạn năng lực lên 3.5 để giải quyết hiệu ứng chạm trần
-  if (allCorrect) return  3.5; 
-  if (allWrong)   return -3.5;
-
-  let theta = 0; // Giá trị khởi tạo năng lực
-  
-  // Dùng phương pháp lặp Newton-Raphson để ước lượng Maximum Likelihood (MLE) của Theta
-  for (let iter = 0; iter < 80; iter++) {
-    let num = 0, den = 0;
-    for (const r of answered) {
-      const pv = p2pl(theta, r.a, r.b);
-      const qv = 1 - pv;
-      num += r.a * (r.u - pv);           // Đạo hàm bậc 1
-      den += r.a * r.a * pv * qv;        // Đạo hàm bậc 2
-    }
-    if (den < 1e-9) break;
-    const delta = num / den;
-    theta += delta;
-    
-    // Chặn theta trong khoảng [-4, 4] để tránh lỗi vô cực
-    theta = Math.max(-4, Math.min(4, theta));
-    if (Math.abs(delta) < 1e-8) break; // Hội tụ thì dừng
-  }
-  return isNaN(theta) ? 0 : theta;
-}
-
-function thetaToScore(theta, max = 300) {
-  // Đổi công thức: Trải dài dải Theta từ [-3.5 đến 3.5] thay vì [-3 đến 3]
-  // Theo công thức: (theta + 3.5) / 7
-  return Math.round(Math.max(0, Math.min(max, max * (theta + 3.5) / 7)));
-}
-
-/* ── Render Giao diện ── */
-function buildUI() {
-  const main = document.getElementById('main');
-  main.innerHTML = '';
-  let globalIdx = 0;
-
-  allSecs.forEach((secQs, si) => {
-    const start  = si * 30 + 1;
-    const eCount = secQs.filter(q => q.d === 1).length;
-    const mCount = secQs.filter(q => q.d === 2).length;
-    const hCount = secQs.filter(q => q.d === 3).length;
-
-    const card = document.createElement('div');
-    card.className = 'sec-card';
-    card.innerHTML = `
-      <div class="sec-head">
-        <div class="sec-head-left">
-          <div class="sec-bullet"></div>
-          <span class="sec-name">${SECS[si].name}</span>
-        </div>
-        <div class="sec-info">
-          <span class="sec-theta" id="theta-${si}">θ = —</span>
-          <span class="sec-pts empty" id="pts-${si}">—</span>
-        </div>
-      </div>
-      <div class="diff-chips">
-        <span class="chip e">🟢 Dễ: ${eCount}</span>
-        <span class="chip m">🟡 Vừa: ${mCount}</span>
-        <span class="chip h">🔴 Khó: ${hCount}</span>
-        <span class="chip-hint">
-          <span class="hint-item"><span class="hint-dot" style="background:var(--correct)"></span>Click 1 lần = Đúng</span>
-          <span class="hint-item"><span class="hint-dot" style="background:var(--wrong)"></span>Click 2 lần = Sai</span>
-          <span class="hint-item"><span class="hint-dot" style="background:var(--border)"></span>Click 3 lần = Xóa</span>
-        </span>
-      </div>
-      <div class="q-grid" id="grid-${si}"></div>
-    `;
-    main.appendChild(card);
-
-    const grid = card.querySelector(`#grid-${si}`);
-    secQs.forEach((q, qi) => {
-      const idx = globalIdx++;
-      const btn = document.createElement('div');
-      btn.className = `q ${['','e','m','h'][q.d]}`;
-      btn.id = `q-${idx}`;
-      btn.innerHTML = `<span class="q-n">${start + qi}</span><span class="q-d">${['','Dễ','Vừa','Khó'][q.d]}</span>`;
-      btn.addEventListener('click', () => handleClick(idx, si));
-      grid.appendChild(btn);
-    });
-  });
-
-  // Footer
-  const footer = document.createElement('div');
-  footer.className = 'footer-note';
-  footer.innerHTML = `
-    ⚠️ <strong>Dữ liệu áp dụng riêng cho Đề V-ACT Số 4.</strong><br>
-    Theo phân tích của AI, đề này có mức độ phân hóa và độ khó <strong>rất cao</strong> (đặc biệt ở phần Toán và Tư duy Khoa học).<br>
-    Do đó, nếu bạn làm sai những câu cực khó, số điểm bị trừ sẽ ít hơn so với đề bình thường. <em>(Đã Fix lỗi 29/30 câu)</em>
-  `;
-  main.appendChild(footer);
-}
-
-function handleClick(idx, si) {
-  const cur = state[idx];
-  state[idx] = cur === null ? 1 : cur === 1 ? 0 : null;
-  const btn = document.getElementById(`q-${idx}`);
-  const q   = allQs[idx];
-  const dClass = ['','e','m','h'][q.d];
-  if      (state[idx] === 1) btn.className = `q ${dClass} correct`;
-  else if (state[idx] === 0) btn.className = `q ${dClass} wrong`;
-  else                       btn.className = `q ${dClass}`;
-  recalc(si);
-  updateProgress();
-}
-
-function recalc(si) {
-  const start  = si * 30;
-  const secQs  = allQs.slice(start, start + 30);
-  const secSt  = state.slice(start, start + 30);
-
-  const theta = estimateTheta(secQs, secSt);
-
-  const ptsEl   = document.getElementById(`pts-${si}`);
-  const thetaEl = document.getElementById(`theta-${si}`);
-  const scEl    = document.getElementById(`sc-${si}`);
-
-  if (theta === null) {
-    ptsEl.textContent   = '—';
-    ptsEl.className     = 'sec-pts empty';
-    thetaEl.textContent = 'θ = —';
-    scEl.textContent    = '—';
-    scEl.closest('.sc-block')?.classList.remove('active');
-  } else {
-    const score = thetaToScore(theta, 300);
-    ptsEl.textContent   = score;
-    ptsEl.className     = 'sec-pts';
-    thetaEl.textContent = `θ = ${theta.toFixed(3)}`;
-    scEl.textContent    = score;
-    scEl.closest('.sc-block')?.classList.add('active');
-  }
-
-  /* Tính tổng điểm 4 phần */
-  let total = 0, hasAny = false;
-  for (let s = 0; s < 4; s++) {
-    const st = state.slice(s * 30, s * 30 + 30);
-    if (st.some(v => v !== null)) {
-      hasAny = true;
-      const qs = allQs.slice(s * 30, s * 30 + 30);
-      const t  = estimateTheta(qs, st);
-      total += t !== null ? thetaToScore(t, 300) : 0;
-    }
-  }
-  document.getElementById('sc-total').textContent = hasAny ? total : '—';
-}
-
-function updateProgress() {
-  const done = state.filter(v => v !== null).length;
-  const pct  = Math.round(done / 120 * 100);
-  document.getElementById('prog').style.width      = pct + '%';
-  document.getElementById('prog-text').textContent = `${done} / 120 câu (${pct}%)`;
-}
-
-function resetAll() {
-  state.fill(null);
-  document.querySelectorAll('.q').forEach(btn => {
-    btn.className = btn.className.replace(' correct','').replace(' wrong','');
-  });
-  for (let s = 0; s < 4; s++) {
-    document.getElementById(`sc-${s}`).textContent    = '—';
-    document.getElementById(`sc-${s}`).closest('.sc-block')?.classList.remove('active');
-    document.getElementById(`pts-${s}`).textContent   = '—';
-    document.getElementById(`pts-${s}`).className     = 'sec-pts empty';
-    document.getElementById(`theta-${s}`).textContent = 'θ = —';
-  }
-  document.getElementById('sc-total').textContent = '—';
-  document.getElementById('prog').style.width      = '0%';
-  document.getElementById('prog-text').textContent = '0 / 120 câu (0%)';
-}
-
-buildUI();
-</script>
-
+            // Render lần đầu
+            renderMath();
+        });
+    </script>
 </body>
 </html>
